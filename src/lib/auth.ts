@@ -31,7 +31,8 @@ export interface User {
 }
 
 // In-memory storage - REPLACE WITH DATABASE IN PRODUCTION
-export const users: User[] = [];
+// This array is internal to this module - access via helper functions only
+const users: User[] = [];
 
 export function findUserByEmail(email: string): User | undefined {
   return users.find((u) => u.email.toLowerCase() === email.toLowerCase());

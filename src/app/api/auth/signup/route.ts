@@ -5,7 +5,9 @@ import {
 } from "@/lib/auth";
 import { sendEmail, getVerificationEmailHtml } from "@/lib/email";
 
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+// Basic email validation regex - allows most common email formats
+// For stricter validation, consider using a dedicated library like validator.js
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Base URL for the application
 const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
