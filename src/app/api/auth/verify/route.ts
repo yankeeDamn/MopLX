@@ -1,68 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import {
-  findUserByVerificationToken,
-  verifyUserEmail,
-} from "@/lib/auth";
-import { sendEmail, getWelcomeEmailHtml } from "@/lib/email";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const token = searchParams.get("token");
-
-    if (!token) {
-      return NextResponse.redirect(
-        new URL("/signin?error=missing-token", request.url)
-      );
-    }
-
-    const user = findUserByVerificationToken(token);
-
-    if (!user) {
-      return NextResponse.redirect(
-        new URL("/signin?error=invalid-token", request.url)
-      );
-    }
-
-    if (user.emailVerified) {
-      return NextResponse.redirect(
-        new URL("/signin?message=already-verified", request.url)
-      );
-    }
-
-    // Verify the user
-    const verified = verifyUserEmail(user.id);
-
-    if (!verified) {
-      return NextResponse.redirect(
-        new URL("/signin?error=verification-failed", request.url)
-      );
-    }
-
-    // Send welcome email (non-blocking - don't fail verification if email fails)
-    try {
-      const emailSent = await sendEmail({
-        to: user.email,
-        subject: "Welcome to MopLX! 🎉",
-        html: getWelcomeEmailHtml(user.name || user.email.split("@")[0]),
-      });
-      
-      if (!emailSent) {
-        console.warn("Failed to send welcome email to:", user.email);
-      }
-    } catch (emailError) {
-      console.error("Welcome email error:", emailError);
-      // Continue with verification success even if welcome email fails
-    }
-
-    // Redirect to signin with success message
-    return NextResponse.redirect(
-      new URL("/signin?message=email-verified", request.url)
-    );
-  } catch (error) {
-    console.error("Verification error:", error);
-    return NextResponse.redirect(
-      new URL("/signin?error=verification-failed", request.url)
-    );
-  }
+// Email verification is now handled by Supabase via /api/auth/callback.
+// This route redirects old links to the sign-in page.
+export function GET(request: NextRequest) {
+  return NextResponse.redirect(new URL("/signin?message=use-supabase-link", request.url));
 }

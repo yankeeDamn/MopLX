@@ -1,31 +1,21 @@
+// Signup is now handled client-side via Supabase Auth (supabase.auth.signUp).
+// This endpoint is kept for backwards compatibility but delegates to Supabase.
 import { NextResponse } from "next/server";
-import {
-  createUser,
-  findUserByEmail,
-} from "@/lib/auth";
-import { sendEmail, getVerificationEmailHtml } from "@/lib/email";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-// Basic email validation regex - allows most common email formats
-// For stricter validation, consider using a dedicated library like validator.js
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Base URL for the application
-const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, password, name } = body;
 
-    // Validate email
     if (!email || typeof email !== "string" || !EMAIL_REGEX.test(email)) {
       return NextResponse.json(
         { message: "Please provide a valid email address." },
         { status: 400 }
       );
     }
-
-    // Validate password
     if (!password || typeof password !== "string" || password.length < 8) {
       return NextResponse.json(
         { message: "Password must be at least 8 characters long." },
@@ -33,35 +23,30 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if user already exists
-    const existingUser = findUserByEmail(email);
-    if (existingUser) {
-      return NextResponse.json(
-        { message: "An account with this email already exists." },
-        { status: 409 }
-      );
-    }
-
-    // Create user
-    const user = await createUser(email, password, name);
-
-    // Generate verification URL
-    const verificationUrl = `${APP_BASE_URL}/api/auth/verify?token=${user.verificationToken}`;
-
-    // Send verification email
-    const emailSent = await sendEmail({
-      to: email,
-      subject: "Verify your MopLX account",
-      html: getVerificationEmailHtml(name || email.split("@")[0], verificationUrl),
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name: name ?? "" },
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/auth/callback`,
+      },
     });
 
-    if (!emailSent && process.env.RESEND_API_KEY) {
-      console.error("Failed to send verification email to:", email);
+    if (error) {
+      if (error.message.toLowerCase().includes("already registered")) {
+        return NextResponse.json(
+          { message: "An account with this email already exists." },
+          { status: 409 }
+        );
+      }
+      return NextResponse.json({ message: error.message }, { status: 422 });
     }
 
     return NextResponse.json(
       {
-        message: "Account created successfully! Please check your inbox to verify your email.",
+        message:
+          "Account created! Check your inbox and click the confirmation link to activate your account.",
         requiresVerification: true,
       },
       { status: 201 }

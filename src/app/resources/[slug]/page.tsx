@@ -1,23 +1,28 @@
-import { resources, getResourceBySlug } from "@/lib/resources";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import type { Resource } from "@/types/database";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return resources.map((resource) => ({
-    slug: resource.slug,
-  }));
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const resource = getResourceBySlug(slug);
-  if (!resource) return { title: "Not Found" };
+  const supabase = await createSupabaseServerClient();
+  const { data: rawMeta } = await supabase
+    .from("resources")
+    .select("title, description")
+    .eq("slug", slug)
+    .single();
+  const resource = rawMeta as { title: string; description: string } | null;
 
+  if (!resource) return { title: "Not Found" };
   return {
     title: `${resource.title} - MopLX`,
     description: resource.description,
@@ -26,9 +31,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ResourcePage({ params }: PageProps) {
   const { slug } = await params;
-  const resource = getResourceBySlug(slug);
+  const supabase = await createSupabaseServerClient();
 
-  if (!resource) {
+  const { data: rawResource, error } = await supabase
+    .from("resources")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+  const resource = rawResource as Resource | null;
+
+  if (!resource || error) {
     notFound();
   }
 
@@ -68,7 +80,7 @@ export default async function ResourcePage({ params }: PageProps) {
               </span>
             )}
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {resource.readTime}
+              {resource.read_time}
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
@@ -78,7 +90,12 @@ export default async function ResourcePage({ params }: PageProps) {
             {resource.description}
           </p>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">
-            Published: {new Date(resource.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+            Published:{" "}
+            {new Date(resource.published_at).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </p>
         </div>
 
@@ -114,14 +131,18 @@ export default async function ResourcePage({ params }: PageProps) {
               <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
                 Course Preview:
               </h4>
-              <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 whitespace-pre-line">
-                {resource.content}
+              <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {resource.content}
+                </ReactMarkdown>
               </div>
             </div>
           </div>
         ) : (
           <article className="prose dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-600 dark:prose-p:text-gray-400 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 dark:prose-pre:bg-gray-800 prose-pre:text-gray-100">
-            <div className="whitespace-pre-line">{resource.content}</div>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {resource.content}
+            </ReactMarkdown>
           </article>
         )}
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Resource } from "@/lib/resources";
+import type { Resource } from "@/types/database";
 
 interface ResourceCardProps {
   resource: Resource;
@@ -30,7 +30,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
             {resource.category}
           </span>
           <span className="text-xs text-gray-500 dark:text-gray-400">
-            {resource.readTime}
+            {resource.read_time}
           </span>
         </div>
 

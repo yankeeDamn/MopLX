@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 interface AuthFormProps {
   mode: "signin" | "signup";
@@ -22,51 +22,52 @@ export default function AuthForm({ mode }: AuthFormProps) {
     setStatus("loading");
     setMessage("");
 
+    const supabase = createSupabaseBrowserClient();
+
     try {
       if (mode === "signup") {
-        // Call signup API
-        const response = await fetch("/api/auth/signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, name }),
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { name: name || "" },
+            emailRedirectTo: `${window.location.origin}/api/auth/callback`,
+          },
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
+        if (error) {
+          setStatus("error");
+          setMessage(error.message);
+        } else {
           setStatus("success");
-          setMessage(data.message);
-          // Clear form
+          setMessage(
+            "Account created! Check your inbox and click the confirmation link to activate your account."
+          );
           setEmail("");
           setPassword("");
           setName("");
-        } else {
-          setStatus("error");
-          setMessage(data.message || "Signup failed. Please try again.");
         }
       } else {
-        // Sign in with NextAuth
-        const result = await signIn("credentials", {
+        const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
-          redirect: false,
         });
 
-        if (result?.error) {
+        if (error) {
           setStatus("error");
-          setMessage(result.error);
+          setMessage(
+            error.message === "Invalid login credentials"
+              ? "Incorrect email or password."
+              : error.message
+          );
         } else {
           setStatus("success");
           setMessage("Sign in successful! Redirecting...");
-          // Redirect after short delay
-          setTimeout(() => {
-            router.push("/");
-            router.refresh();
-          }, 500);
+          router.refresh();
+          router.push("/");
         }
       }
-    } catch (error) {
-      console.error("Auth error:", error);
+    } catch {
       setStatus("error");
       setMessage("Network error. Please try again later.");
     }
@@ -158,19 +159,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
                   fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
                 Processing...
               </span>
@@ -182,20 +172,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
           </button>
         </form>
 
-        {/* Status Messages */}
         {status === "success" && (
           <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
             <p className="text-green-700 dark:text-green-400 text-sm flex items-start">
-              <svg
-                className="w-5 h-5 mr-2 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
+              <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               {message}
             </p>
@@ -205,23 +186,14 @@ export default function AuthForm({ mode }: AuthFormProps) {
         {status === "error" && (
           <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <p className="text-red-700 dark:text-red-400 text-sm flex items-start">
-              <svg
-                className="w-5 h-5 mr-2 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
+              <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               {message}
             </p>
           </div>
         )}
 
-        {/* Toggle between signin/signup */}
         <div className="mt-6 text-center">
           <p className="text-gray-600 dark:text-gray-400">
             {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}

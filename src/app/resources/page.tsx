@@ -1,6 +1,9 @@
-import { resources } from "@/lib/resources";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ResourceCard from "@/components/ResourceCard";
 import type { Metadata } from "next";
+import type { Resource } from "@/types/database";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Resources - MopLX",
@@ -8,14 +11,25 @@ export const metadata: Metadata = {
     "Browse our collection of free and premium DevOps learning resources including tutorials on Kubernetes, CI/CD, Terraform, and more.",
 };
 
-export default function ResourcesPage() {
+export default async function ResourcesPage() {
+  const supabase = await createSupabaseServerClient();
+
+  const { data: allResources, error } = await supabase
+    .from("resources")
+    .select("*")
+    .order("published_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to fetch resources:", error.message);
+  }
+
+  const resources = (allResources ?? []) as Resource[];
   const freeResources = resources.filter((r) => r.type === "free");
   const paidResources = resources.filter((r) => r.type === "paid");
 
   return (
     <div className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
             Learning Resources
@@ -27,38 +41,40 @@ export default function ResourcesPage() {
           </p>
         </div>
 
-        {/* Free Resources */}
         <div className="mb-16">
           <div className="flex items-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Free Resources
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Free Resources</h2>
             <span className="ml-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-medium px-3 py-1 rounded-full">
               {freeResources.length} available
             </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {freeResources.map((resource) => (
-              <ResourceCard key={resource.slug} resource={resource} />
-            ))}
-          </div>
+          {freeResources.length === 0 ? (
+            <p className="text-gray-500 dark:text-gray-400">No free resources yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {freeResources.map((resource) => (
+                <ResourceCard key={resource.slug} resource={resource} />
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Premium Resources */}
         <div>
           <div className="flex items-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Premium Courses
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Premium Courses</h2>
             <span className="ml-3 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-medium px-3 py-1 rounded-full">
               {paidResources.length} courses
             </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {paidResources.map((resource) => (
-              <ResourceCard key={resource.slug} resource={resource} />
-            ))}
-          </div>
+          {paidResources.length === 0 ? (
+            <p className="text-gray-500 dark:text-gray-400">No premium courses yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {paidResources.map((resource) => (
+                <ResourceCard key={resource.slug} resource={resource} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

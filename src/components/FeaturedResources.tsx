@@ -1,10 +1,19 @@
 import Link from "next/link";
-import { getFreeResources, getPaidResources } from "@/lib/resources";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Resource } from "@/types/database";
 import ResourceCard from "./ResourceCard";
 
-export default function FeaturedResources() {
-  const freeResources = getFreeResources().slice(0, 3);
-  const paidResources = getPaidResources().slice(0, 3);
+export default async function FeaturedResources() {
+  const supabase = await createSupabaseServerClient();
+
+  const { data: allResources } = await supabase
+    .from("resources")
+    .select("*")
+    .order("published_at", { ascending: false });
+
+  const resources = (allResources ?? []) as Resource[];
+  const freeResources = resources.filter((r) => r.type === "free").slice(0, 3);
+  const paidResources = resources.filter((r) => r.type === "paid").slice(0, 3);
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900/50">
