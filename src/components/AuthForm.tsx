@@ -65,7 +65,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
           }, 500);
         }
       }
-    } catch {
+    } catch (error) {
+      console.error("Auth error:", error);
       setStatus("error");
       setMessage("Network error. Please try again later.");
     }

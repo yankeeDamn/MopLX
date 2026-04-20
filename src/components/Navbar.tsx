@@ -4,6 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 
+// Helper function to get display name from user
+function getUserDisplayName(user: { name?: string | null; email?: string | null }): string {
+  if (user.name) return user.name;
+  if (user.email) return user.email.split("@")[0];
+  return "User";
+}
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
@@ -49,10 +56,10 @@ export default function Navbar() {
             {/* Auth buttons */}
             {isLoading ? (
               <div className="w-20 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-            ) : session ? (
+            ) : session?.user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {session.user?.name || session.user?.email?.split("@")[0]}
+                  {getUserDisplayName(session.user)}
                 </span>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
@@ -143,10 +150,10 @@ export default function Navbar() {
             </Link>
             
             {/* Mobile Auth buttons */}
-            {session ? (
+            {session?.user ? (
               <>
                 <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 mt-2 pt-4">
-                  Signed in as {session.user?.name || session.user?.email?.split("@")[0]}
+                  Signed in as {getUserDisplayName(session.user)}
                 </div>
                 <button
                   onClick={() => {

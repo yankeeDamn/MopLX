@@ -7,6 +7,9 @@ import { sendEmail, getVerificationEmailHtml } from "@/lib/email";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+// Base URL for the application
+const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -41,8 +44,7 @@ export async function POST(request: Request) {
     const user = await createUser(email, password, name);
 
     // Generate verification URL
-    const baseUrl = process.env.NEXTAUTH_URL || "https://mop-lx.vercel.app";
-    const verificationUrl = `${baseUrl}/api/auth/verify?token=${user.verificationToken}`;
+    const verificationUrl = `${APP_BASE_URL}/api/auth/verify?token=${user.verificationToken}`;
 
     // Send verification email
     const emailSent = await sendEmail({

@@ -4,6 +4,8 @@ A modern newsletter and learning platform for DevOps, Cloud, and Infrastructure 
 
 ## 🚀 Features
 
+- **User Authentication**: Sign up/sign in with email verification using NextAuth.js v5
+- **Email Verification**: Confirmation emails via Resend (optional, works without in dev mode)
 - **Newsletter Subscription**: Email subscription with API integration ready for services like Mailchimp, ConvertKit, or Resend
 - **Free Learning Resources**: Tutorials and guides on Kubernetes, CI/CD, Terraform, Monitoring, and more
 - **Premium Courses**: Paid deep-dive courses with gated content
@@ -18,7 +20,19 @@ A modern newsletter and learning platform for DevOps, Cloud, and Infrastructure 
 ```
 src/
 ├── app/
+│   ├── (auth)/
+│   │   ├── signin/           # Sign in page
+│   │   │   └── page.tsx
+│   │   └── signup/           # Sign up page
+│   │       └── page.tsx
 │   ├── api/
+│   │   ├── auth/
+│   │   │   ├── [...nextauth]/ # NextAuth.js handler
+│   │   │   │   └── route.ts
+│   │   │   ├── signup/        # User registration endpoint
+│   │   │   │   └── route.ts
+│   │   │   └── verify/        # Email verification endpoint
+│   │   │       └── route.ts
 │   │   ├── subscribe/        # Newsletter subscription API endpoint
 │   │   │   └── route.ts
 │   │   └── articles/         # Articles CRUD API endpoint
@@ -32,26 +46,37 @@ src/
 │   ├── contact/
 │   │   └── page.tsx          # Contact page with details
 │   ├── globals.css           # Global styles and CSS variables
-│   ├── layout.tsx            # Root layout with Navbar + Footer
+│   ├── layout.tsx            # Root layout with Navbar + Footer + SessionProvider
 │   └── page.tsx              # Landing page (Hero + Features + Resources)
 ├── components/
-│   ├── Navbar.tsx            # Navigation with mobile menu
+│   ├── Navbar.tsx            # Navigation with mobile menu and auth state
 │   ├── Footer.tsx            # Footer with links, social, and contact
 │   ├── Hero.tsx              # Hero section with CTA
 │   ├── Features.tsx          # Feature cards section
 │   ├── FeaturedResources.tsx # Resource preview section
 │   ├── ResourceCard.tsx      # Resource card component
-│   └── NewsletterForm.tsx    # Newsletter subscription form
+│   ├── NewsletterForm.tsx    # Newsletter subscription form
+│   ├── AuthForm.tsx          # Sign in/sign up form component
+│   └── SessionProvider.tsx   # NextAuth session provider wrapper
 └── lib/
+    ├── auth.ts               # NextAuth configuration and user management
+    ├── email.ts              # Email service using Resend
     └── resources.ts          # Resource data and helper functions
 ```
 
 ## 🛠 Tech Stack
 
-- **Framework**: [Next.js](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
+- **Authentication**: NextAuth.js v5 (Auth.js) - *Note: Uses beta version for Next.js 16 compatibility*
+- **Email**: Resend (optional)
 - **Deployment**: Vercel (recommended)
+
+### ⚠️ Important Notes
+
+- **In-Memory Storage**: The current authentication uses in-memory storage for users. This is for demonstration purposes only. In production, connect to a real database (see "Connecting to a Database" section below).
+- **NextAuth.js Beta**: This project uses NextAuth.js v5 beta (`next-auth@5.0.0-beta.25`) for compatibility with Next.js 16. Monitor the [Auth.js releases](https://github.com/nextauthjs/next-auth/releases) for stable versions.
 
 ## 🏃 Getting Started
 
@@ -69,6 +94,31 @@ npm run build
 npm start
 ```
 
+## 🔐 Environment Variables
+
+Create a `.env.local` file in the root directory for local development:
+
+```env
+# Required for NextAuth.js
+NEXTAUTH_SECRET=your-secret-key-at-least-32-characters-long
+NEXTAUTH_URL=http://localhost:3000
+
+# Optional: Application base URL (defaults to NEXTAUTH_URL)
+# NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Optional: Email service (Resend)
+# If not set, emails will be logged to console instead
+RESEND_API_KEY=re_your_api_key
+EMAIL_FROM=MopLX <noreply@yourdomain.com>
+```
+
+### Generating a Secure Secret
+
+```bash
+# Generate a random secret
+openssl rand -base64 32
+```
+
 ## ▲ Deploying to Vercel
 
 This project is ready to deploy to Vercel without extra platform configuration.
@@ -76,10 +126,12 @@ This project is ready to deploy to Vercel without extra platform configuration.
 1. Push the repository to GitHub.
 2. In Vercel, click **Add New → Project** and import `yankeeDamn/MopLX`.
 3. Let Vercel detect the app as a **Next.js** project.
-4. Keep the default settings:
-   - Install command: `npm install`
-   - Build command: `npm run build`
-   - Output setting: Next.js default
+4. **Add Environment Variables** (Project Settings → Environment Variables):
+   - `NEXTAUTH_SECRET` (required) - A random string at least 32 characters
+   - `NEXTAUTH_URL` (required) - Your production URL (e.g., `https://mop-lx.vercel.app`)
+   - `NEXT_PUBLIC_APP_URL` (optional) - Same as NEXTAUTH_URL, used for email links
+   - `RESEND_API_KEY` (optional) - For email verification
+   - `EMAIL_FROM` (optional) - Sender email address
 5. Deploy.
 
 ### Why the default setup works
@@ -87,15 +139,7 @@ This project is ready to deploy to Vercel without extra platform configuration.
 - The app uses **Next.js 16** with the App Router.
 - `next.config.ts` uses the default Next.js configuration.
 - No `vercel.json` file is required for the current setup.
-- The `/api/subscribe` and `/api/articles` routes can run on Vercel as-is.
-
-### Environment variables for newsletter providers
-
-If you connect `/api/subscribe` to Mailchimp, ConvertKit, Resend, or another provider later:
-
-1. Add the provider secrets in **Vercel → Project Settings → Environment Variables**.
-2. Update `src/app/api/subscribe/route.ts` to read those variables.
-3. Redeploy the project.
+- All API routes run on Vercel serverless functions.
 
 ### Custom domain
 

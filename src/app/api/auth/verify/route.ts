@@ -39,12 +39,21 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Send welcome email
-    await sendEmail({
-      to: user.email,
-      subject: "Welcome to MopLX! 🎉",
-      html: getWelcomeEmailHtml(user.name || user.email.split("@")[0]),
-    });
+    // Send welcome email (non-blocking - don't fail verification if email fails)
+    try {
+      const emailSent = await sendEmail({
+        to: user.email,
+        subject: "Welcome to MopLX! 🎉",
+        html: getWelcomeEmailHtml(user.name || user.email.split("@")[0]),
+      });
+      
+      if (!emailSent) {
+        console.warn("Failed to send welcome email to:", user.email);
+      }
+    } catch (emailError) {
+      console.error("Welcome email error:", emailError);
+      // Continue with verification success even if welcome email fails
+    }
 
     // Redirect to signin with success message
     return NextResponse.redirect(

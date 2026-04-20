@@ -2,7 +2,24 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-// In-memory user store (for demo purposes - use a database in production)
+/**
+ * ⚠️ WARNING: IN-MEMORY USER STORAGE
+ * 
+ * This implementation uses in-memory storage for demonstration purposes only.
+ * In production, you MUST connect to a real database (e.g., PostgreSQL, MongoDB).
+ * 
+ * Current limitations:
+ * - All user data is lost on server restart
+ * - Won't work properly in serverless/distributed environments (each instance has its own memory)
+ * - Not suitable for production use
+ * 
+ * To use with a database, install Prisma and update the functions below:
+ * - npm install prisma @prisma/client
+ * - Update findUserByEmail, findUserById, createUser, etc. to use Prisma
+ * 
+ * See README.md for detailed database setup instructions.
+ */
+
 export interface User {
   id: string;
   email: string;
@@ -13,7 +30,7 @@ export interface User {
   createdAt: Date;
 }
 
-// Simple in-memory storage (replace with database in production)
+// In-memory storage - REPLACE WITH DATABASE IN PRODUCTION
 export const users: User[] = [];
 
 export function findUserByEmail(email: string): User | undefined {

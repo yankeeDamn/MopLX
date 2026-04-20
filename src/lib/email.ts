@@ -1,5 +1,8 @@
 import { Resend } from "resend";
 
+// Base URL for the application (used in email links)
+const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+
 // Initialize Resend client lazily to avoid build-time errors
 let resend: Resend | null = null;
 
@@ -11,6 +14,36 @@ function getResendClient(): Resend | null {
     resend = new Resend(process.env.RESEND_API_KEY);
   }
   return resend;
+}
+
+/**
+ * Sanitize a string for safe inclusion in HTML text content
+ * Escapes HTML special characters to prevent XSS/injection attacks
+ */
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/**
+ * Validate and sanitize a URL for use in href attributes
+ * Only allows http/https protocols and returns empty string for invalid URLs
+ */
+function sanitizeUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    // Only allow http and https protocols
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return "";
+    }
+    return url;
+  } catch {
+    return "";
+  }
 }
 
 export interface SendEmailOptions {
@@ -52,6 +85,13 @@ export async function sendEmail({ to, subject, html }: SendEmailOptions): Promis
 }
 
 export function getVerificationEmailHtml(name: string, verificationUrl: string): string {
+  // Sanitize name for HTML text content
+  const safeName = escapeHtml(name);
+  // Validate URL for href attribute (use original URL, not HTML-escaped)
+  const safeVerificationUrl = sanitizeUrl(verificationUrl);
+  // Escape URL for display in text content
+  const displayUrl = escapeHtml(verificationUrl);
+  
   return `
 <!DOCTYPE html>
 <html>
@@ -66,14 +106,14 @@ export function getVerificationEmailHtml(name: string, verificationUrl: string):
   </div>
   
   <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
-    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${name || "there"},</p>
+    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${safeName || "there"},</p>
     
     <p style="font-size: 16px; margin-bottom: 20px;">
       Thanks for signing up for MopLX! Please verify your email address by clicking the button below:
     </p>
     
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${verificationUrl}" 
+      <a href="${safeVerificationUrl}" 
          style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); 
                 color: white; 
                 padding: 14px 30px; 
@@ -90,7 +130,7 @@ export function getVerificationEmailHtml(name: string, verificationUrl: string):
       If the button doesn't work, copy and paste this link into your browser:
     </p>
     <p style="font-size: 12px; color: #6b7280; word-break: break-all;">
-      ${verificationUrl}
+      ${displayUrl}
     </p>
     
     <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
@@ -105,6 +145,12 @@ export function getVerificationEmailHtml(name: string, verificationUrl: string):
 }
 
 export function getWelcomeEmailHtml(name: string): string {
+  // Sanitize name for HTML text content
+  const safeName = escapeHtml(name);
+  // Validate URL for href attribute
+  const signInUrl = `${APP_BASE_URL}/signin`;
+  const safeSignInUrl = sanitizeUrl(signInUrl);
+  
   return `
 <!DOCTYPE html>
 <html>
@@ -118,7 +164,7 @@ export function getWelcomeEmailHtml(name: string): string {
   </div>
   
   <div style="background: #ffffff; padding: 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
-    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${name || "there"},</p>
+    <p style="font-size: 16px; margin-bottom: 20px;">Hi ${safeName || "there"},</p>
     
     <p style="font-size: 16px; margin-bottom: 20px;">
       Your email has been verified and your MopLX account is now active! 
@@ -126,7 +172,7 @@ export function getWelcomeEmailHtml(name: string): string {
     </p>
     
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${process.env.NEXTAUTH_URL || "https://mop-lx.vercel.app"}/signin" 
+      <a href="${safeSignInUrl}" 
          style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); 
                 color: white; 
                 padding: 14px 30px; 
