@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!resource) return { title: "Not Found" };
 
   return {
-    title: `${resource.title} - LearnXOps`,
+    title: `${resource.title} - MopLX`,
     description: resource.description,
   };
 }
