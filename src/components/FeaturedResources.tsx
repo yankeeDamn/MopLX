@@ -2,16 +2,37 @@ import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Resource } from "@/types/database";
 import ResourceCard from "./ResourceCard";
+import { resources as fallbackResources } from "@/lib/resources";
 
 export default async function FeaturedResources() {
-  const supabase = await createSupabaseServerClient();
+  let resources: Resource[];
 
-  const { data: allResources } = await supabase
-    .from("resources")
-    .select("*")
-    .order("published_at", { ascending: false });
+  // Try to fetch from Supabase first
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data: allResources } = await supabase
+        .from("resources")
+        .select("*")
+        .order("published_at", { ascending: false });
 
-  const resources = (allResources ?? []) as Resource[];
+      if (allResources) {
+        resources = (allResources as Resource[]).map(r => ({
+          ...r,
+          publishedAt: r.published_at, // Convert snake_case to camelCase for compatibility
+          readTime: r.read_time,
+        }));
+      } else {
+        resources = fallbackResources;
+      }
+    } catch (error) {
+      console.error("Supabase error, falling back to static resources:", error);
+      resources = fallbackResources;
+    }
+  } else {
+    resources = fallbackResources;
+  }
+
   const freeResources = resources.filter((r) => r.type === "free").slice(0, 3);
   const paidResources = resources.filter((r) => r.type === "paid").slice(0, 3);
 

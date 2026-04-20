@@ -30,7 +30,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
             {resource.category}
           </span>
           <span className="text-xs text-gray-500 dark:text-gray-400">
-            {resource.read_time}
+            {resource.read_time || (resource as any).readTime}
           </span>
         </div>
 
@@ -45,7 +45,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
         <div className="mt-4 flex items-center justify-between">
           {resource.type === "paid" ? (
             <span className="text-lg font-bold text-gray-900 dark:text-white">
-              ${resource.price}
+              ${(resource as any).price || resource.price}
             </span>
           ) : (
             <span className="text-sm font-medium text-green-600 dark:text-green-400">

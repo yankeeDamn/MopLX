@@ -2,6 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ResourceCard from "@/components/ResourceCard";
 import type { Metadata } from "next";
 import type { Resource } from "@/types/database";
+import { resources as fallbackResources } from "@/lib/resources";
 
 export const dynamic = "force-dynamic";
 
@@ -12,18 +13,36 @@ export const metadata: Metadata = {
 };
 
 export default async function ResourcesPage() {
-  const supabase = await createSupabaseServerClient();
+  let resources: Resource[];
 
-  const { data: allResources, error } = await supabase
-    .from("resources")
-    .select("*")
-    .order("published_at", { ascending: false });
+  // Try to fetch from Supabase first
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data: allResources, error } = await supabase
+        .from("resources")
+        .select("*")
+        .order("published_at", { ascending: false });
 
-  if (error) {
-    console.error("Failed to fetch resources:", error.message);
+      if (!error && allResources) {
+        resources = (allResources as Resource[]).map(r => ({
+          ...r,
+          publishedAt: r.published_at, // Convert snake_case to camelCase for compatibility
+          readTime: r.read_time,
+        }));
+      } else {
+        // Fall back to original resources if Supabase fails
+        resources = fallbackResources;
+      }
+    } catch (error) {
+      console.error("Supabase error, falling back to static resources:", error);
+      resources = fallbackResources;
+    }
+  } else {
+    // Use fallback resources if Supabase is not configured
+    resources = fallbackResources;
   }
 
-  const resources = (allResources ?? []) as Resource[];
   const freeResources = resources.filter((r) => r.type === "free");
   const paidResources = resources.filter((r) => r.type === "paid");
 

@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Resource } from "@/types/database";
+import { resources as fallbackResources } from "@/lib/resources";
 
 export const dynamic = "force-dynamic";
 
@@ -14,13 +15,34 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createSupabaseServerClient();
-  const { data: rawMeta } = await supabase
-    .from("resources")
-    .select("title, description")
-    .eq("slug", slug)
-    .single();
-  const resource = rawMeta as { title: string; description: string } | null;
+
+  // Try Supabase first, fall back to static resources
+  let resource: { title: string; description: string } | null = null;
+
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data: rawMeta } = await supabase
+        .from("resources")
+        .select("title, description")
+        .eq("slug", slug)
+        .single();
+      resource = rawMeta as { title: string; description: string } | null;
+    } catch (error) {
+      console.error("Supabase error in metadata:", error);
+    }
+  }
+
+  // Fall back to static resources if not found in Supabase
+  if (!resource) {
+    const fallbackResource = fallbackResources.find(r => r.slug === slug);
+    if (fallbackResource) {
+      resource = {
+        title: fallbackResource.title,
+        description: fallbackResource.description,
+      };
+    }
+  }
 
   if (!resource) return { title: "Not Found" };
   return {
@@ -31,16 +53,43 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ResourcePage({ params }: PageProps) {
   const { slug } = await params;
-  const supabase = await createSupabaseServerClient();
 
-  const { data: rawResource, error } = await supabase
-    .from("resources")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-  const resource = rawResource as Resource | null;
+  let resource: Resource | null = null;
 
-  if (!resource || error) {
+  // Try Supabase first
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data: rawResource, error } = await supabase
+        .from("resources")
+        .select("*")
+        .eq("slug", slug)
+        .single();
+      if (!error && rawResource) {
+        resource = rawResource as Resource;
+      }
+    } catch (error) {
+      console.error("Supabase error in page:", error);
+    }
+  }
+
+  // Fall back to static resources if not found in Supabase
+  if (!resource) {
+    const fallbackResource = fallbackResources.find(r => r.slug === slug);
+    if (fallbackResource) {
+      resource = {
+        ...fallbackResource,
+        id: fallbackResource.slug, // Add required id field
+        published_at: fallbackResource.publishedAt,
+        read_time: fallbackResource.readTime,
+        price: fallbackResource.price || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+    }
+  }
+
+  if (!resource) {
     notFound();
   }
 
