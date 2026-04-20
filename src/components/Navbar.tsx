@@ -12,7 +12,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-              LearnXOps
+              MopLX
             </span>
           </Link>
 
@@ -35,6 +35,12 @@ export default function Navbar() {
               className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             >
               Pricing
+            </Link>
+            <Link
+              href="/contact"
+              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            >
+              Contact
             </Link>
             <Link
               href="#subscribe"
@@ -98,6 +104,13 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
+            </Link>
+            <Link
+              href="/contact"
+              className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact
             </Link>
             <Link
               href="#subscribe"

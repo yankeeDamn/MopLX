@@ -3,7 +3,7 @@ import ResourceCard from "@/components/ResourceCard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Resources - LearnXOps",
+  title: "Resources - MopLX",
   description:
     "Browse our collection of free and premium DevOps learning resources including tutorials on Kubernetes, CI/CD, Terraform, and more.",
 };

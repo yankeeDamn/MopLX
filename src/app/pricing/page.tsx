@@ -3,7 +3,7 @@ import NewsletterForm from "@/components/NewsletterForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pricing - LearnXOps",
+  title: "Pricing - MopLX",
   description:
     "Choose the plan that fits your learning goals. Free newsletter or premium access to all courses and resources.",
 };
