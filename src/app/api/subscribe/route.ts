@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email } = body;
 
-    if (!email || !email.includes("@")) {
+    if (!email || typeof email !== "string" || !EMAIL_REGEX.test(email)) {
       return NextResponse.json(
         { message: "Please provide a valid email address." },
         { status: 400 }
