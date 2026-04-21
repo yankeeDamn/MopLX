@@ -37,7 +37,16 @@ export async function middleware(request: NextRequest) {
   );
 
   // Refresh session — IMPORTANT: do not remove this call
-  const { data: { user } } = await supabase.auth.getUser();
+  // Wrapped in try/catch so a misconfigured or unreachable Supabase project
+  // doesn't crash every page request with "This page couldn't load".
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Supabase unreachable — continue without session, page will still render
+    return NextResponse.next({ request });
+  }
 
   // Protect /admin route
   if (request.nextUrl.pathname.startsWith("/admin")) {
