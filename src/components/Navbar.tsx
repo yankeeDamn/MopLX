@@ -18,6 +18,11 @@ export default function Navbar() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      setLoading(false);
+      return;
+    }
+
     const supabase = createSupabaseBrowserClient();
 
     // Get initial session
@@ -35,6 +40,7 @@ export default function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) return;
     const supabase = createSupabaseBrowserClient();
     await supabase.auth.signOut();
     window.location.href = "/";
