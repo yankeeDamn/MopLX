@@ -158,6 +158,20 @@ The `/api/subscribe` endpoint is ready to integrate with your preferred email se
 
 ## 📝 Connecting a Backend & Posting Articles
 
+### Fastest ways to add new content
+
+There are three supported paths, depending on how you are running MopLX:
+
+1. If Supabase is configured, sign in as your admin user and open `/admin` to create, edit, or delete resources in the `resources` table.
+2. If you want static content checked into the repo, add a new object in `src/lib/resources.ts`.
+3. If you want to automate publishing, `POST` to `/api/articles` during local development or from another system.
+
+### Which source the site uses
+
+- If `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set, the resources pages read from the Supabase `resources` table.
+- If Supabase is not configured or the query fails, the site falls back to the hardcoded content in `src/lib/resources.ts`.
+- The `/api/articles` endpoint only appends to the in-memory array for the current server process, so it is useful for demos but not durable storage.
+
 ### How the Backend Works
 
 MopLX includes a built-in REST API for managing articles. The API routes are located in `src/app/api/` and run as Next.js API route handlers (serverless functions on Vercel).
@@ -245,6 +259,26 @@ You can also add articles directly by editing `src/lib/resources.ts`:
   price: 49, // only for paid resources
 }
 ```
+
+After adding an entry there:
+
+1. Ensure `slug` is unique.
+2. Keep `publishedAt` in `YYYY-MM-DD` format so sorting works correctly.
+3. Use `type: "paid"` only when you also provide `price`.
+4. Restart the dev server if the module cache does not refresh immediately.
+
+### Managing content through the admin UI
+
+If Supabase is set up, MopLX already includes an admin screen at `/admin`.
+
+To use it:
+
+1. Configure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+2. Set `NEXT_PUBLIC_ADMIN_EMAIL` to the email address allowed to manage resources.
+3. Sign up or sign in with that email.
+4. Open `/admin` and use the resource form to create or update entries.
+
+The admin UI writes directly to the `resources` table, which is the cleanest way to manage content in production.
 
 ### Connecting to a Database (Production)
 

@@ -6,9 +6,9 @@ export default function Features() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       ),
-      title: "Weekly Newsletter",
+      title: "Weekly briefing",
       description:
-        "Curated DevOps content delivered to your inbox every week. Stay updated with the latest tools, practices, and industry trends.",
+        "A publication-style digest that keeps the front page focused on new stories, useful links, and operator-grade takeaways.",
     },
     {
       icon: (
@@ -16,9 +16,9 @@ export default function Features() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
       ),
-      title: "Hands-on Labs",
+      title: "Story-first learning",
       description:
-        "Practice with real-world scenarios. Our tutorials include code samples, configurations, and step-by-step guides you can follow along.",
+        "The home page surfaces featured articles and topic clusters instead of product marketing blocks, closer to LearnXops' structure.",
     },
     {
       icon: (
@@ -26,9 +26,9 @@ export default function Features() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
-      title: "Career Growth",
+      title: "Free and premium tracks",
       description:
-        "From beginner to expert. Our content is structured to help you progress in your DevOps career with certification prep and advanced topics.",
+        "Readers can start with open resources and move into premium handbooks and longer deep dives when they want more depth.",
     },
     {
       icon: (
@@ -36,64 +36,66 @@ export default function Features() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       ),
-      title: "Community",
+      title: "Single Join CTA",
       description:
-        "Join a thriving community of DevOps engineers, SREs, and cloud architects. Share knowledge, ask questions, and grow together.",
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-      ),
-      title: "Expert Content",
-      description:
-        "All content is created and reviewed by experienced DevOps professionals with real-world production experience at scale.",
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      title: "Free & Premium",
-      description:
-        "Access free tutorials to get started, then unlock premium deep-dive courses when you're ready to level up your skills.",
+        "The public nav now removes separate Sign In and Sign Up links in favor of a cleaner Join entry point for new readers.",
     },
   ];
 
+  const topics = [
+    "DevOps",
+    "DevSecOps",
+    "CloudOps",
+    "MLOps",
+    "AIOps",
+    "Kubernetes",
+    "CI/CD",
+    "Observability",
+  ];
+
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#f7f4ed] px-4 py-20 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
-            Everything You Need to{" "}
-            <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-              Level Up
-            </span>
+        <div className="mb-16 text-center">
+          <h2 className="text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">
+            Built like a learning publication, not a SaaS landing page.
           </h2>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            We provide comprehensive learning resources for DevOps engineers at every stage of their career.
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-stone-600">
+            The reference site leans into topic coverage, featured stories, and a single subscription path. These are the same shifts applied here.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
+              className="rounded-[1.75rem] border border-stone-200 bg-white p-6 shadow-sm transition-transform hover:-translate-y-1"
             >
-              <div className="w-12 h-12 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
                 {feature.icon}
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="mb-2 text-lg font-semibold text-stone-950">
                 {feature.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              <p className="text-sm leading-relaxed text-stone-600">
                 {feature.description}
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-12 rounded-[2rem] border border-stone-200 bg-white p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-stone-500">Topic coverage</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {topics.map((topic) => (
+              <span
+                key={topic}
+                className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </section>

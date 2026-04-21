@@ -7,6 +7,20 @@ import remarkGfm from "remark-gfm";
 import type { Resource } from "@/types/database";
 import { resources as fallbackResources } from "@/lib/resources";
 
+// Extended type to handle both Supabase and fallback resource formats
+type ResourceWithFallback = Resource | {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  type: "free" | "paid";
+  image: string;
+  content: string;
+  publishedAt: string;
+  readTime: string;
+  price?: number;
+};
+
 export const dynamic = "force-dynamic";
 
 interface PageProps {
@@ -54,7 +68,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ResourcePage({ params }: PageProps) {
   const { slug } = await params;
 
-  let resource: Resource | null = null;
+  let resource: ResourceWithFallback | null = null;
 
   // Try Supabase first
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
@@ -77,15 +91,7 @@ export default async function ResourcePage({ params }: PageProps) {
   if (!resource) {
     const fallbackResource = fallbackResources.find(r => r.slug === slug);
     if (fallbackResource) {
-      resource = {
-        ...fallbackResource,
-        id: fallbackResource.slug, // Add required id field
-        published_at: fallbackResource.publishedAt,
-        read_time: fallbackResource.readTime,
-        price: fallbackResource.price || null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
+      resource = fallbackResource;
     }
   }
 
@@ -121,7 +127,7 @@ export default async function ResourcePage({ params }: PageProps) {
             </span>
             {resource.type === "paid" ? (
               <span className="text-sm font-medium text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-3 py-1 rounded-full">
-                Premium - ${resource.price}
+              Premium - ${(resource as any).price || resource.price}
               </span>
             ) : (
               <span className="text-sm font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full">
@@ -129,7 +135,7 @@ export default async function ResourcePage({ params }: PageProps) {
               </span>
             )}
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {resource.read_time}
+              {(resource as any).read_time || (resource as any).readTime}
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
@@ -140,7 +146,7 @@ export default async function ResourcePage({ params }: PageProps) {
           </p>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">
             Published:{" "}
-            {new Date(resource.published_at).toLocaleDateString("en-US", {
+            {new Date((resource as any).published_at || (resource as any).publishedAt).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -165,7 +171,7 @@ export default async function ResourcePage({ params }: PageProps) {
                 hands-on labs, and downloadable resources.
               </p>
               <div className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                ${resource.price}
+                ${(resource as any).price || resource.price}
                 <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-2">
                   one-time payment
                 </span>

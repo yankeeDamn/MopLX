@@ -4,6 +4,20 @@ import type { Metadata } from "next";
 import type { Resource } from "@/types/database";
 import { resources as fallbackResources } from "@/lib/resources";
 
+// Extended type to handle both Supabase and fallback resource formats
+type ResourceWithFallback = Resource | {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  type: "free" | "paid";
+  image: string;
+  content: string;
+  publishedAt: string;
+  readTime: string;
+  price?: number;
+};
+
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -13,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ResourcesPage() {
-  let resources: Resource[];
+  let resources: ResourceWithFallback[];
 
   // Try to fetch from Supabase first
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {

@@ -5,6 +5,13 @@ import { useState, useEffect } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/resources", label: "Resources" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/contact", label: "Contact" },
+];
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -36,46 +43,50 @@ export default function Navbar() {
   const displayName = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-stone-200/80 bg-[rgba(255,252,246,0.92)] backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold tracking-tight text-stone-900">
               MopLX
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</Link>
-            <Link href="/resources" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Resources</Link>
-            <Link href="/pricing" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</Link>
-            <Link href="/contact" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact</Link>
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-stone-700 transition-colors hover:text-stone-950"
+              >
+                {link.label}
+              </Link>
+            ))}
 
-            {/* Auth buttons */}
             {loading ? (
-              <div className="w-20 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+              <div className="h-10 w-24 animate-pulse rounded-full bg-stone-200" />
             ) : user ? (
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600 dark:text-gray-400">{displayName}</span>
+                <span className="text-sm text-stone-500">{displayName}</span>
                 <button
                   onClick={handleSignOut}
-                  className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                  className="text-sm font-medium text-stone-700 transition-colors hover:text-stone-950"
                 >
                   Sign Out
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
-                <Link href="/signin" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Sign In</Link>
-                <Link href="/signup" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">Sign Up</Link>
-              </div>
+              <Link
+                href="/signup"
+                className="rounded-full bg-stone-950 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-stone-800"
+              >
+                Join
+              </Link>
             )}
           </div>
 
-          {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-300"
+            className="rounded-lg p-2 text-stone-700 md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -89,32 +100,39 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden pb-4 space-y-2">
-            <Link href="/" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-            <Link href="/resources" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Resources</Link>
-            <Link href="/pricing" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
-            <Link href="/contact" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+          <div className="space-y-2 pb-4 md:hidden">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block rounded-2xl px-4 py-2 text-stone-700 transition-colors hover:bg-stone-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
 
-            {/* Mobile Auth */}
             {user ? (
               <>
-                <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 mt-2 pt-4">
+                <div className="mt-2 border-t border-stone-200 px-4 pt-4 text-sm text-stone-500">
                   Signed in as {displayName}
                 </div>
                 <button
                   onClick={() => { setMobileMenuOpen(false); handleSignOut(); }}
-                  className="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                  className="block w-full rounded-2xl px-4 py-2 text-left text-stone-700 transition-colors hover:bg-stone-100"
                 >
                   Sign Out
                 </button>
               </>
             ) : (
-              <>
-                <Link href="/signin" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
-                <Link href="/signup" className="block px-4 py-2 bg-indigo-600 text-white rounded-lg text-center font-medium" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
-              </>
+              <Link
+                href="/signup"
+                className="block rounded-2xl bg-stone-950 px-4 py-3 text-center font-medium text-white"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Join
+              </Link>
             )}
           </div>
         )}

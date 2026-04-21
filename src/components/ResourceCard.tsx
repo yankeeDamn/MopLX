@@ -1,11 +1,20 @@
 import Link from "next/link";
 import type { Resource } from "@/types/database";
 
+type ResourceCardResource = Pick<Resource, "slug" | "title" | "description" | "category" | "type"> & {
+  read_time?: string;
+  readTime?: string;
+  price?: number | null;
+};
+
 interface ResourceCardProps {
-  resource: Resource;
+  resource: ResourceCardResource;
 }
 
 export default function ResourceCard({ resource }: ResourceCardProps) {
+  const readTime = resource.read_time ?? resource.readTime ?? "5 min read";
+  const price = resource.price ?? null;
+
   return (
     <article className="group bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <div className="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 flex items-center justify-center relative">
@@ -29,9 +38,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
           <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded">
             {resource.category}
           </span>
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            {resource.read_time || (resource as any).readTime}
-          </span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{readTime}</span>
         </div>
 
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
@@ -45,7 +52,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
         <div className="mt-4 flex items-center justify-between">
           {resource.type === "paid" ? (
             <span className="text-lg font-bold text-gray-900 dark:text-white">
-              ${(resource as any).price || resource.price}
+              ${price}
             </span>
           ) : (
             <span className="text-sm font-medium text-green-600 dark:text-green-400">
