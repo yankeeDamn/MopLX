@@ -19,6 +19,12 @@ export async function POST(request: Request) {
           { status: 401 }
         );
       }
+    } else if (process.env.NODE_ENV === "production") {
+      console.error("[api/articles] API_SECRET_KEY is not set in production — blocking unauthenticated request.");
+      return NextResponse.json(
+        { message: "Endpoint is not available." },
+        { status: 503 }
+      );
     } else {
       console.warn("[api/articles] API_SECRET_KEY is not set — running in unauthenticated dev mode.");
     }

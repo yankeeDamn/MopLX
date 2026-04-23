@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
 import { resources } from "@/lib/resources";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://mop-lx.vercel.app";
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://mop-lx.vercel.app");
 
+export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date() },
     { url: `${baseUrl}/resources`, lastModified: new Date() },

@@ -1,7 +1,9 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
+import { resources } from "@/lib/resources";
 
 export default function Hero() {
+  const resourceCount = resources.length;
   const briefingPoints = [
     "One practical XOps briefing each week",
     "Free tutorials plus premium deep dives",
@@ -84,7 +86,7 @@ export default function Hero() {
 
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl bg-stone-100 p-4">
-              <p className="text-2xl font-semibold text-stone-950">6</p>
+              <p className="text-2xl font-semibold text-stone-950">{resourceCount}</p>
               <p className="mt-1 text-sm text-stone-600">resources available</p>
             </div>
             <div className="rounded-2xl bg-stone-100 p-4">
