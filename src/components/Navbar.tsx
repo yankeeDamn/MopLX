@@ -19,6 +19,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       return;
     }
@@ -74,6 +75,14 @@ export default function Navbar() {
             ) : user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-stone-500">{displayName}</span>
+                {user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL && (
+                  <Link
+                    href="/admin"
+                    className="text-sm font-medium text-stone-700 transition-colors hover:text-stone-950"
+                  >
+                    Admin
+                  </Link>
+                )}
                 <button
                   onClick={handleSignOut}
                   className="text-sm font-medium text-stone-700 transition-colors hover:text-stone-950"
@@ -124,6 +133,15 @@ export default function Navbar() {
                 <div className="mt-2 border-t border-stone-200 px-4 pt-4 text-sm text-stone-500">
                   Signed in as {displayName}
                 </div>
+                {user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL && (
+                  <Link
+                    href="/admin"
+                    className="block rounded-2xl px-4 py-2 text-stone-700 transition-colors hover:bg-stone-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                )}
                 <button
                   onClick={() => { setMobileMenuOpen(false); handleSignOut(); }}
                   className="block w-full rounded-2xl px-4 py-2 text-left text-stone-700 transition-colors hover:bg-stone-100"

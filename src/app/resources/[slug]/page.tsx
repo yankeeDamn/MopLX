@@ -8,7 +8,7 @@ import type { Resource } from "@/types/database";
 import { resources as fallbackResources } from "@/lib/resources";
 
 // Extended type to handle both Supabase and fallback resource formats
-type ResourceWithFallback = Resource | {
+type FallbackResource = {
   slug: string;
   title: string;
   description: string;
@@ -20,6 +20,20 @@ type ResourceWithFallback = Resource | {
   readTime: string;
   price?: number;
 };
+
+type ResourceWithFallback = Resource | FallbackResource;
+
+function getReadTime(r: ResourceWithFallback): string {
+  return "read_time" in r ? r.read_time : r.readTime;
+}
+
+function getPublishedAt(r: ResourceWithFallback): string {
+  return "published_at" in r ? r.published_at : r.publishedAt;
+}
+
+function getPrice(r: ResourceWithFallback): number | null | undefined {
+  return "price" in r ? r.price : undefined;
+}
 
 export const dynamic = "force-dynamic";
 
@@ -127,7 +141,7 @@ export default async function ResourcePage({ params }: PageProps) {
             </span>
             {resource.type === "paid" ? (
               <span className="text-sm font-medium text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-3 py-1 rounded-full">
-              Premium - ${(resource as any).price || resource.price}
+              Premium - ${getPrice(resource)}
               </span>
             ) : (
               <span className="text-sm font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full">
@@ -135,7 +149,7 @@ export default async function ResourcePage({ params }: PageProps) {
               </span>
             )}
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {(resource as any).read_time || (resource as any).readTime}
+              {getReadTime(resource)}
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
@@ -146,7 +160,7 @@ export default async function ResourcePage({ params }: PageProps) {
           </p>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">
             Published:{" "}
-            {new Date((resource as any).published_at || (resource as any).publishedAt).toLocaleDateString("en-US", {
+            {new Date(getPublishedAt(resource)).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -171,7 +185,7 @@ export default async function ResourcePage({ params }: PageProps) {
                 hands-on labs, and downloadable resources.
               </p>
               <div className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                ${(resource as any).price || resource.price}
+                ${getPrice(resource)}
                 <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-2">
                   one-time payment
                 </span>

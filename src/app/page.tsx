@@ -34,7 +34,7 @@ export default function Home() {
                 A simpler front door for the whole site.
               </h2>
               <p className="mt-4 max-w-xl text-lg text-stone-600">
-                Instead of asking visitors to choose between sign in and sign up immediately, the site now guides them toward one clear action: Join. That keeps the homepage aligned with the newsletter model used by LearnXops.
+                Instead of asking visitors to choose between sign in and sign up immediately, the site now guides them toward one clear action: Join. That keeps the homepage focused on the one thing that matters: getting you to great content fast.
               </p>
             </div>
 

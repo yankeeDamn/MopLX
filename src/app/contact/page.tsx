@@ -12,10 +12,10 @@ export default function ContactPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-4xl sm:text-5xl font-bold text-stone-950">
             Get in Touch
           </h1>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-stone-600 max-w-2xl mx-auto">
             Have a question, feedback, or want to collaborate? We&apos;d love to hear
             from you.
           </p>
@@ -23,40 +23,40 @@ export default function ContactPage() {
 
         {/* Contact Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="w-12 h-12 mx-auto rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4">
+          <div className="bg-white rounded-xl p-6 border border-stone-200 text-center">
+            <div className="w-12 h-12 mx-auto rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 mb-4">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Email</h3>
+            <h3 className="font-semibold text-stone-950 mb-2">Email</h3>
             <a
               href="mailto:contact@moplx.com"
-              className="text-indigo-600 dark:text-indigo-400 hover:underline text-sm"
+              className="text-stone-950 underline hover:text-stone-700 text-sm"
             >
               contact@moplx.com
             </a>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="w-12 h-12 mx-auto rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4">
+          <div className="bg-white rounded-xl p-6 border border-stone-200 text-center">
+            <div className="w-12 h-12 mx-auto rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 mb-4">
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
               </svg>
             </div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Twitter / X</h3>
+            <h3 className="font-semibold text-stone-950 mb-2">Twitter / X</h3>
             <a
               href="https://twitter.com/moplx"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-indigo-600 dark:text-indigo-400 hover:underline text-sm"
+              className="text-stone-950 underline hover:text-stone-700 text-sm"
             >
               @moplx
             </a>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 text-center">
-            <div className="w-12 h-12 mx-auto rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-4">
+          <div className="bg-white rounded-xl p-6 border border-stone-200 text-center">
+            <div className="w-12 h-12 mx-auto rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 mb-4">
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   fillRule="evenodd"
@@ -65,12 +65,12 @@ export default function ContactPage() {
                 />
               </svg>
             </div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">GitHub</h3>
+            <h3 className="font-semibold text-stone-950 mb-2">GitHub</h3>
             <a
               href="https://github.com/yankeeDamn/MopLX"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-indigo-600 dark:text-indigo-400 hover:underline text-sm"
+              className="text-stone-950 underline hover:text-stone-700 text-sm"
             >
               yankeeDamn/MopLX
             </a>
@@ -78,41 +78,41 @@ export default function ContactPage() {
         </div>
 
         {/* Additional Info */}
-        <div className="bg-gradient-to-br from-gray-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-900/20 rounded-xl p-8 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <div className="bg-stone-50 rounded-xl p-8 border border-stone-200">
+          <h2 className="text-2xl font-bold text-stone-950 mb-4">
             Want to Contribute?
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
+          <p className="text-stone-600 mb-4">
             MopLX is an open platform. If you&apos;d like to write articles, share
             tutorials, or contribute to the project, here&apos;s how:
           </p>
-          <ul className="space-y-3 text-gray-600 dark:text-gray-400">
+          <ul className="space-y-3 text-stone-600">
             <li className="flex items-start">
-              <svg className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-amber-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               <span>
-                <strong className="text-gray-900 dark:text-white">Post articles</strong> via the <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm">POST /api/articles</code> endpoint
+                <strong className="text-stone-950">Post articles</strong> via the <code className="bg-stone-100 px-1.5 py-0.5 rounded text-sm">POST /api/articles</code> endpoint
               </span>
             </li>
             <li className="flex items-start">
-              <svg className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-amber-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               <span>
-                <strong className="text-gray-900 dark:text-white">Open a PR</strong> on{" "}
-                <a href="https://github.com/yankeeDamn/MopLX" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+                <strong className="text-stone-950">Open a PR</strong> on{" "}
+                <a href="https://github.com/yankeeDamn/MopLX" target="_blank" rel="noopener noreferrer" className="text-stone-950 underline hover:text-stone-700">
                   GitHub
                 </a>
               </span>
             </li>
             <li className="flex items-start">
-              <svg className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-amber-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
               <span>
-                <strong className="text-gray-900 dark:text-white">Email us</strong> at{" "}
-                <a href="mailto:contact@moplx.com" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+                <strong className="text-stone-950">Email us</strong> at{" "}
+                <a href="mailto:contact@moplx.com" className="text-stone-950 underline hover:text-stone-700">
                   contact@moplx.com
                 </a>{" "}
                 with your article idea

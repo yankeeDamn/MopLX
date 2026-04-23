@@ -8,7 +8,7 @@ export default function Features() {
       ),
       title: "Weekly briefing",
       description:
-        "A publication-style digest that keeps the front page focused on new stories, useful links, and operator-grade takeaways.",
+        "A curated digest delivered every week covering the tools, patterns, and practices modern operators actually use.",
     },
     {
       icon: (
@@ -18,7 +18,7 @@ export default function Features() {
       ),
       title: "Story-first learning",
       description:
-        "The home page surfaces featured articles and topic clusters instead of product marketing blocks, closer to LearnXops' structure.",
+        "Every topic is anchored to real scenarios. No filler theory — just content you can apply the same day.",
     },
     {
       icon: (
@@ -28,7 +28,7 @@ export default function Features() {
       ),
       title: "Free and premium tracks",
       description:
-        "Readers can start with open resources and move into premium handbooks and longer deep dives when they want more depth.",
+        "Start with free tutorials and graduate to premium handbooks and deep dives at your own pace.",
     },
     {
       icon: (
@@ -36,9 +36,9 @@ export default function Features() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       ),
-      title: "Single Join CTA",
+      title: "Simple onboarding",
       description:
-        "The public nav now removes separate Sign In and Sign Up links in favor of a cleaner Join entry point for new readers.",
+        "One clear action to join. No friction, no confusing account flows.",
     },
   ];
 
@@ -58,10 +58,10 @@ export default function Features() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">
-            Built like a learning publication, not a SaaS landing page.
+            Everything you need to level up your XOps skills.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-stone-600">
-            The reference site leans into topic coverage, featured stories, and a single subscription path. These are the same shifts applied here.
+            Practical guides, weekly briefings, and premium deep dives — all in one place.
           </p>
         </div>
 

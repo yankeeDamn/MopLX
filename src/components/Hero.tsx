@@ -20,7 +20,7 @@ export default function Hero() {
         <div>
           <div className="inline-flex items-center rounded-full border border-amber-200 bg-white/85 px-4 py-2 text-sm font-medium text-stone-700 shadow-sm">
             <span className="mr-2 h-2 w-2 rounded-full bg-amber-500" />
-            Join 10,000+ engineers learning modern XOps
+            A learning hub for modern XOps engineers
           </div>
 
           <h1 className="mt-7 max-w-4xl text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl lg:text-6xl">
@@ -37,7 +37,7 @@ export default function Hero() {
               href="/signup"
               className="rounded-full bg-stone-950 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-stone-800"
             >
-              Join MopLX
+              Create account
             </Link>
             <Link
               href="/resources"
@@ -48,6 +48,7 @@ export default function Hero() {
           </div>
 
           <div className="mt-8 max-w-xl" id="join">
+            <p className="mb-3 text-sm font-medium text-stone-700">Get the free weekly briefing — no account required:</p>
             <NewsletterForm />
             <p className="mt-3 text-sm text-stone-500">
               Get the email newsletter and unlock access to new stories, guides, and member updates.
@@ -83,12 +84,12 @@ export default function Hero() {
 
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl bg-stone-100 p-4">
-              <p className="text-2xl font-semibold text-stone-950">10k+</p>
-              <p className="mt-1 text-sm text-stone-600">newsletter readers</p>
+              <p className="text-2xl font-semibold text-stone-950">6</p>
+              <p className="mt-1 text-sm text-stone-600">resources available</p>
             </div>
             <div className="rounded-2xl bg-stone-100 p-4">
-              <p className="text-2xl font-semibold text-stone-950">50+</p>
-              <p className="mt-1 text-sm text-stone-600">guides and tutorials</p>
+              <p className="text-2xl font-semibold text-stone-950">Free &amp; Pro</p>
+              <p className="mt-1 text-sm text-stone-600">content tracks</p>
             </div>
             <div className="rounded-2xl bg-stone-100 p-4">
               <p className="text-2xl font-semibold text-stone-950">100%</p>
