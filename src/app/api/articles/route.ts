@@ -10,6 +10,25 @@ export async function GET() {
 // POST /api/articles — create a new article
 export async function POST(request: Request) {
   try {
+    const apiSecretKey = process.env.API_SECRET_KEY;
+    if (apiSecretKey) {
+      const authHeader = request.headers.get("Authorization");
+      if (authHeader !== `Bearer ${apiSecretKey}`) {
+        return NextResponse.json(
+          { message: "Unauthorized. A valid Authorization: Bearer <token> header is required." },
+          { status: 401 }
+        );
+      }
+    } else if (process.env.NODE_ENV === "production") {
+      console.error("[api/articles] API_SECRET_KEY is not set in production — blocking unauthenticated request.");
+      return NextResponse.json(
+        { message: "Endpoint is not available." },
+        { status: 503 }
+      );
+    } else {
+      console.warn("[api/articles] API_SECRET_KEY is not set — running in unauthenticated dev mode.");
+    }
+
     const body = await request.json();
 
     const { slug, title, description, category, type, content, readTime, price } = body;

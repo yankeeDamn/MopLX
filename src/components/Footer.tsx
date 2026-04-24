@@ -2,15 +2,15 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-stone-950 text-stone-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1">
-            <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold text-white">
               MopLX
             </span>
-            <p className="mt-4 text-gray-400 max-w-md">
+            <p className="mt-4 text-stone-400 max-w-md">
               Your go-to newsletter for DevOps, Cloud, and Infrastructure
               learning. Get weekly curated content, tutorials, and resources
               delivered straight to your inbox.
@@ -18,7 +18,7 @@ export default function Footer() {
             <div className="flex space-x-4 mt-6">
               <a
                 href="https://twitter.com/moplx"
-                className="text-gray-400 hover:text-indigo-400 transition-colors"
+                className="text-stone-400 hover:text-amber-400 transition-colors"
                 aria-label="Twitter"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@ export default function Footer() {
               </a>
               <a
                 href="https://github.com/yankeeDamn/MopLX"
-                className="text-gray-400 hover:text-indigo-400 transition-colors"
+                className="text-stone-400 hover:text-amber-400 transition-colors"
                 aria-label="GitHub"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ export default function Footer() {
               </a>
               <a
                 href="https://linkedin.com/company/moplx"
-                className="text-gray-400 hover:text-indigo-400 transition-colors"
+                className="text-stone-400 hover:text-amber-400 transition-colors"
                 aria-label="LinkedIn"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -55,22 +55,22 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="hover:text-indigo-400 transition-colors">
+                <Link href="/" className="hover:text-amber-400 transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/resources" className="hover:text-indigo-400 transition-colors">
+                <Link href="/resources" className="hover:text-amber-400 transition-colors">
                   Resources
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-indigo-400 transition-colors">
+                <Link href="/pricing" className="hover:text-amber-400 transition-colors">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-indigo-400 transition-colors">
+                <Link href="/contact" className="hover:text-amber-400 transition-colors">
                   Contact
                 </Link>
               </li>
@@ -82,27 +82,27 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Topics</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/resources" className="hover:text-indigo-400 transition-colors">
+                <Link href="/resources?category=Kubernetes" className="hover:text-amber-400 transition-colors">
                   Kubernetes
                 </Link>
               </li>
               <li>
-                <Link href="/resources" className="hover:text-indigo-400 transition-colors">
+                <Link href="/resources?category=CI%2FCD" className="hover:text-amber-400 transition-colors">
                   CI/CD
                 </Link>
               </li>
               <li>
-                <Link href="/resources" className="hover:text-indigo-400 transition-colors">
+                <Link href="/resources?category=IaC" className="hover:text-amber-400 transition-colors">
                   Terraform / IaC
                 </Link>
               </li>
               <li>
-                <Link href="/resources" className="hover:text-indigo-400 transition-colors">
+                <Link href="/resources?category=Cloud" className="hover:text-amber-400 transition-colors">
                   Cloud (AWS/GCP/Azure)
                 </Link>
               </li>
               <li>
-                <Link href="/resources" className="hover:text-indigo-400 transition-colors">
+                <Link href="/resources?category=Observability" className="hover:text-amber-400 transition-colors">
                   Observability
                 </Link>
               </li>
@@ -114,17 +114,17 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="mailto:contact@moplx.com" className="hover:text-indigo-400 transition-colors">
+                <a href="mailto:contact@moplx.com" className="hover:text-amber-400 transition-colors">
                   📧 contact@moplx.com
                 </a>
               </li>
               <li>
-                <a href="https://twitter.com/moplx" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-400 transition-colors">
+                <a href="https://twitter.com/moplx" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">
                   🐦 @moplx
                 </a>
               </li>
               <li>
-                <a href="https://github.com/yankeeDamn/MopLX" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-400 transition-colors">
+                <a href="https://github.com/yankeeDamn/MopLX" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">
                   💻 GitHub
                 </a>
               </li>
@@ -132,7 +132,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+        <div className="border-t border-stone-800 mt-8 pt-8 text-center text-stone-500 text-sm">
           <p>&copy; {new Date().getFullYear()} MopLX. All rights reserved.</p>
         </div>
       </div>

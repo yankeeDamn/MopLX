@@ -67,6 +67,7 @@ export default function AdminPage() {
   }, [supabase]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchResources();
   }, [fetchResources]);
 
@@ -170,7 +171,7 @@ export default function AdminPage() {
           {!showForm && (
             <button
               onClick={openNew}
-              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors"
+              className="px-5 py-2.5 bg-stone-950 hover:bg-stone-800 text-white font-medium rounded-lg transition-colors"
             >
               + New Resource
             </button>
@@ -232,7 +233,7 @@ export default function AdminPage() {
               )}
 
               <div className="flex gap-3 pt-2">
-                <button type="submit" disabled={saving} className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-medium rounded-lg transition-colors">
+                <button type="submit" disabled={saving} className="px-6 py-2.5 bg-stone-950 hover:bg-stone-800 disabled:bg-stone-400 text-white font-medium rounded-lg transition-colors">
                   {saving ? "Saving..." : editing ? "Update Resource" : "Create Resource"}
                 </button>
                 <button type="button" onClick={cancelForm} className="px-6 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
@@ -264,7 +265,7 @@ export default function AdminPage() {
                   <p className="text-xs text-gray-500 dark:text-gray-400 font-mono">/resources/{r.slug}</p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <button onClick={() => openEdit(r)} className="px-3 py-1.5 text-sm text-indigo-600 dark:text-indigo-400 border border-indigo-300 dark:border-indigo-700 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors">
+                  <button onClick={() => openEdit(r)} className="px-3 py-1.5 text-sm text-stone-950 dark:text-stone-300 border border-stone-300 dark:border-stone-700 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-900/20 transition-colors">
                     Edit
                   </button>
                   {deleteConfirm === r.id ? (
@@ -293,7 +294,7 @@ export default function AdminPage() {
 
 // ─── Small helpers ────────────────────────────────────────────
 const input =
-  "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all";
+  "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-stone-500 transition-all";
 
 function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: React.ReactNode }) {
   return (

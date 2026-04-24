@@ -14,12 +14,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // In a production app, you would integrate with an email service like:
-    // - Mailchimp
-    // - ConvertKit
-    // - Resend
-    // - SendGrid
-    // For now, we'll simulate a successful subscription
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json(
+        { message: "Newsletter signup is not available yet. Please check back soon." },
+        { status: 503 }
+      );
+    }
 
     // Example: await addToMailingList(email);
 
