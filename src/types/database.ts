@@ -67,7 +67,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
-        Update: Partial<Omit<Resource, "id" | "created_at">>;
+        Update: Partial<Omit<Resource, "id" | "created_at" | "updated_at">>;
         Relationships: [];
       };
       media: {

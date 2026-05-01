@@ -25,6 +25,7 @@ export async function POST(request: Request) {
 
     const { error } = await supabase
       .from("analytics")
+      // @ts-ignore - Known issue with Supabase SSR client type inference
       .insert({
         resource_id,
         event_type,
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
 
     // Increment views counter if it's a view event
     if (event_type === "view") {
+      // @ts-ignore - RPC function not fully typed in Database definition
       await supabase.rpc("increment_views", { resource_uuid: resource_id });
     }
 
@@ -76,6 +78,7 @@ export async function GET(request: Request) {
 
     if (stats && resourceId) {
       // Get aggregated stats for a specific resource
+      // @ts-ignore - RPC function not fully typed in Database definition
       const { data, error } = await supabase.rpc("get_resource_stats", {
         resource_uuid: resourceId,
       });

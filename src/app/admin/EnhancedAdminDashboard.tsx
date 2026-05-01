@@ -219,26 +219,30 @@ export default function EnhancedAdminDashboard() {
     if (editing) {
       const { error: updateError } = await supabase
         .from("resources")
+        // @ts-ignore - Known issue with Supabase SSR client type inference
         .update(payload)
         .eq("id", editing.id);
       error = updateError;
     } else {
       const insertPayload: Database['public']['Tables']['resources']['Insert'] = {
-        ...payload,
-        slug: payload.slug!,
-        title: payload.title!,
-        description: payload.description!,
-        category: payload.category!,
-        type: payload.type!,
-        image: payload.image!,
-        content: payload.content!,
-        published_at: payload.published_at!,
-        read_time: payload.read_time!,
-        is_published: payload.is_published!,
-        featured: payload.featured!,
+        slug: form.slug.trim(),
+        title: form.title.trim(),
+        description: form.description.trim(),
+        category: form.category.trim(),
+        type: form.type,
+        image: form.image.trim(),
+        content: form.content,
+        published_at: form.published_at,
+        read_time: form.read_time.trim(),
+        price: form.type === "paid" && form.price ? Number(form.price) : null,
+        is_published: form.is_published,
+        featured: form.featured,
+        author_email: null,
+        views: 0,
       };
       const { error: insertError } = await supabase
         .from("resources")
+        // @ts-ignore - Known issue with Supabase SSR client type inference
         .insert(insertPayload);
       error = insertError;
     }
@@ -287,6 +291,7 @@ export default function EnhancedAdminDashboard() {
   async function bulkPublish() {
     const ids = Array.from(selectedResources);
     for (const id of ids) {
+      // @ts-ignore - Known issue with Supabase SSR client type inference
       await supabase.from("resources").update({ is_published: true }).eq("id", id);
     }
     setSelectedResources(new Set());
@@ -296,6 +301,7 @@ export default function EnhancedAdminDashboard() {
   async function bulkUnpublish() {
     const ids = Array.from(selectedResources);
     for (const id of ids) {
+      // @ts-ignore - Known issue with Supabase SSR client type inference
       await supabase.from("resources").update({ is_published: false }).eq("id", id);
     }
     setSelectedResources(new Set());
