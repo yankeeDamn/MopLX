@@ -6,6 +6,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Resource } from "@/types/database";
 import { resources as fallbackResources } from "@/lib/resources";
+import ShareButtons from "@/components/ShareButtons";
+import ResourceAnalyticsTracker from "@/components/ResourceAnalyticsTracker";
 
 // Extended type to handle both Supabase and fallback resource formats
 type FallbackResource = {
@@ -113,9 +115,16 @@ export default async function ResourcePage({ params }: PageProps) {
     notFound();
   }
 
+  // Get resource ID for analytics (only if from Supabase)
+  const resourceId = "id" in resource ? resource.id : undefined;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const resourceUrl = `${appUrl}/resources/${slug}`;
+
   return (
-    <div className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <>
+      {resourceId && <ResourceAnalyticsTracker resourceId={resourceId} />}
+      <div className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center text-sm text-gray-500 dark:text-gray-400">
           <Link href="/" className="hover:text-indigo-600 dark:hover:text-indigo-400">
@@ -166,6 +175,19 @@ export default async function ResourcePage({ params }: PageProps) {
               day: "numeric",
             })}
           </p>
+          
+          {/* Social Sharing */}
+          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Share this article:
+            </p>
+            <ShareButtons 
+              url={resourceUrl} 
+              title={resource.title} 
+              description={resource.description}
+              resourceId={resourceId}
+            />
+          </div>
         </div>
 
         {/* Content */}
@@ -229,5 +251,6 @@ export default async function ResourcePage({ params }: PageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

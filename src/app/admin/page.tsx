@@ -1,8 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
 
-const AdminClient = dynamic(() => import("./AdminClient"), { ssr: false });
+const EnhancedAdminDashboard = dynamic(() => import("./EnhancedAdminDashboard"), { ssr: false });
 
 export default function AdminPage() {
-  return <AdminClient />;
+  return <EnhancedAdminDashboard />;
 }
