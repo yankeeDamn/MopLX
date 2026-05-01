@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { Resource } from "@/types/database";
+import type { Resource, Database } from "@/types/database";
 import { useRouter } from "next/navigation";
 
 // ─── Types ────────────────────────────────────────────────────
@@ -114,7 +114,7 @@ export default function AdminPage() {
     setSaving(true);
     setFeedback(null);
 
-    const payload = {
+    const payload: Database['public']['Tables']['resources']['Update'] = {
       slug: form.slug.trim(),
       title: form.title.trim(),
       description: form.description.trim(),
@@ -129,11 +129,28 @@ export default function AdminPage() {
 
     let error;
     if (editing) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ({ error } = await (supabase.from("resources") as any).update(payload).eq("id", editing.id));
+      const { error: updateError } = await supabase
+        .from("resources")
+        .update(payload)
+        .eq("id", editing.id);
+      error = updateError;
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ({ error } = await (supabase.from("resources") as any).insert(payload));
+      const insertPayload: Database['public']['Tables']['resources']['Insert'] = {
+        ...payload,
+        slug: payload.slug!,
+        title: payload.title!,
+        description: payload.description!,
+        category: payload.category!,
+        type: payload.type!,
+        image: payload.image!,
+        content: payload.content!,
+        published_at: payload.published_at!,
+        read_time: payload.read_time!,
+      };
+      const { error: insertError } = await supabase
+        .from("resources")
+        .insert(insertPayload);
+      error = insertError;
     }
 
     setSaving(false);
