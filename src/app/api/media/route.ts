@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Media } from "@/types/database";
 
 // POST /api/media — upload media file
 export async function POST(request: Request) {
@@ -76,6 +77,7 @@ export async function POST(request: Request) {
     // Save media record to database
     const { data: mediaRecord, error: dbError } = await supabase
       .from("media")
+      // @ts-ignore - Known issue with Supabase SSR client type inference
       .insert({
         resource_id: resourceId,
         url: publicUrl,
@@ -170,7 +172,8 @@ export async function DELETE(request: Request) {
     }
 
     // Get media record to find the file path
-    const { data: media, error: fetchError } = await supabase
+    // @ts-ignore - Known issue with Supabase SSR client type inference
+    const { data: media, error: fetchError }: { data: Media | null; error: any } = await supabase
       .from("media")
       .select("*")
       .eq("id", mediaId)
