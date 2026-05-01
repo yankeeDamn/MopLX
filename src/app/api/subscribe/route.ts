@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const { data: subscriberData, error } = await supabase
       .from("subscribers")
       // @ts-ignore - Known issue with Supabase SSR client type inference for new tables
-      .insert({ email: normalizedEmail, confirmed: false })
+      .insert({ email: normalizedEmail, confirmed: true })
       .select("unsubscribe_token")
       .single();
 

@@ -89,26 +89,39 @@ export async function POST(request: Request) {
 
   // ── 4. Send emails ─────────────────────────────────────────────────────────
   const APP_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+  // Send in batches of 10 to avoid overwhelming the email provider or hitting
+  // serverless function timeouts with very large subscriber lists.
+  const BATCH_SIZE = 10;
   let sentCount = 0;
   let failedCount = 0;
 
-  for (const subscriber of subscribers as Pick<Subscriber, "id" | "email" | "unsubscribe_token">[]) {
-    // Append a personalised unsubscribe footer to every outgoing email
-    const unsubscribeUrl = `${APP_BASE_URL}/api/unsubscribe?token=${subscriber.unsubscribe_token}`;
-    const personalizedHtml = appendUnsubscribeFooter(html, unsubscribeUrl);
+  const subscriberList = subscribers as Pick<Subscriber, "id" | "email" | "unsubscribe_token">[];
 
-    const success = await sendEmail({
-      to: subscriber.email,
-      subject,
-      html: personalizedHtml,
-    });
+  for (let i = 0; i < subscriberList.length; i += BATCH_SIZE) {
+    const batch = subscriberList.slice(i, i + BATCH_SIZE);
 
-    if (success) {
-      sentCount++;
-    } else {
-      failedCount++;
-      console.warn(`[newsletter/send] Failed to send to ${subscriber.email}`);
-    }
+    const results = await Promise.all(
+      batch.map(async (subscriber) => {
+        // Append a personalized unsubscribe footer to every outgoing email
+        const unsubscribeUrl = `${APP_BASE_URL}/api/unsubscribe?token=${subscriber.unsubscribe_token}`;
+        const personalizedHtml = appendUnsubscribeFooter(html, unsubscribeUrl);
+
+        const success = await sendEmail({
+          to: subscriber.email,
+          subject,
+          html: personalizedHtml,
+        });
+
+        if (!success) {
+          console.warn(`[newsletter/send] Failed to send to ${subscriber.email}`);
+        }
+        return success;
+      })
+    );
+
+    sentCount += results.filter(Boolean).length;
+    failedCount += results.filter((r) => !r).length;
   }
 
   console.log(`[newsletter/send] Done — sent: ${sentCount}, failed: ${failedCount}`);
