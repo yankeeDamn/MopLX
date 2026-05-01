@@ -2,7 +2,48 @@
 
 A modern newsletter and learning platform for DevOps, Cloud, and Infrastructure engineers. Built with Next.js, TypeScript, and Tailwind CSS.
 
-## 🎉 New Features
+## 🚀 Quick Start
+
+**Ready to launch in under 30 minutes!**
+
+### 📖 Complete Documentation
+
+| Guide | Purpose | Time | Audience |
+|-------|---------|------|----------|
+| **[🎯 NEXT_STEPS.md](./NEXT_STEPS.md)** | **Your roadmap** | 5 min read | **Start here!** |
+| **[⚡ QUICKSTART.md](./QUICKSTART.md)** | Fastest setup | 30 minutes | First-time users |
+| **[📚 SETUP_GUIDE.md](./SETUP_GUIDE.md)** | Detailed local setup | 15 minutes | Step-by-step learners |
+| **[🚀 DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment | 2-3 hours | Ready to deploy |
+| **[🎨 ADMIN_GUIDE.md](./ADMIN_GUIDE.md)** | Dashboard features | Reference | Content creators |
+| **[✅ IMPLEMENTATION_CHECKLIST.md](./IMPLEMENTATION_CHECKLIST.md)** | Track progress | Ongoing | Project managers |
+
+### ⚡ Super Quick Start
+
+```bash
+# 1. Clone and install
+git clone https://github.com/yankeeDamn/MopLX.git
+cd MopLX
+npm install
+
+# 2. Set up environment (interactive helper)
+bash scripts/setup-env.sh
+
+# 3. Create Supabase project & run schema
+# Visit https://supabase.com → Create project
+# Run supabase/schema.sql in SQL Editor
+# Create storage buckets: 'images' and 'videos' (both public)
+
+# 4. Run the app
+npm run dev
+
+# 5. Access admin at http://localhost:3000/admin
+```
+
+**Prerequisites:** Node.js 20+, Supabase account (free tier works!), 30 minutes
+
+> 💡 **New user?** Read [NEXT_STEPS.md](./NEXT_STEPS.md) first for your complete implementation roadmap!
+
+## 🎉 Features
 
 **Enhanced Admin Dashboard** with powerful content management capabilities:
 - 📸 **Media Management** - Upload and manage images/videos with drag-and-drop
@@ -12,10 +53,6 @@ A modern newsletter and learning platform for DevOps, Cloud, and Infrastructure 
 - 📦 **Bulk Operations** - Publish/unpublish/delete multiple articles at once
 - 👁️ **Preview Mode** - See how articles look before publishing
 - 🎨 **Multiple View Modes** - List, Grid, and Analytics views
-
-**📖 Documentation:**
-- **[Setup Guide](./SETUP_GUIDE.md)** - Get started in 15 minutes
-- **[Admin Guide](./ADMIN_GUIDE.md)** - Complete feature documentation
 
 ## 🚀 Features
 
