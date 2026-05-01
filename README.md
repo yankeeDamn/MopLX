@@ -193,26 +193,44 @@ npm start
 
 ## 🔐 Environment Variables
 
-Create a `.env.local` file in the root directory for local development:
+Copy the setup template and update it for your local environment:
+
+```bash
+cp .env.example .env.local
+```
 
 ```env
-# Required for NextAuth.js
-NEXTAUTH_SECRET=your-secret-key-at-least-32-characters-long
-NEXTAUTH_URL=http://localhost:3000
+# Supabase (required)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
-# Optional: Application base URL (defaults to NEXTAUTH_URL)
-# NEXT_PUBLIC_APP_URL=http://localhost:3000
+# Admin access (required)
+NEXT_PUBLIC_ADMIN_EMAIL=your-email@example.com
+ADMIN_EMAIL=your-email@example.com
+
+# Local app URL
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Optional canonical/base URL for sitemap + robots in production
+# NEXT_PUBLIC_BASE_URL=https://yourdomain.com
+
+# Recommended for production API protection
+# API_SECRET_KEY=generate-with-openssl-rand-base64-32
 
 # Optional: Email service (Resend)
 # If not set, emails will be logged to console instead
-RESEND_API_KEY=re_your_api_key
-EMAIL_FROM=MopLX <noreply@yourdomain.com>
+# RESEND_API_KEY=re_your_api_key
+# EMAIL_FROM=MopLX <noreply@yourdomain.com>
+
+# Optional fallback used by email helpers
+# NEXTAUTH_URL=http://localhost:3000
 ```
 
-### Generating a Secure Secret
+### Generating an API Secret
 
 ```bash
-# Generate a random secret
+# Generate a random secret for API_SECRET_KEY
 openssl rand -base64 32
 ```
 
@@ -224,11 +242,17 @@ This project is ready to deploy to Vercel without extra platform configuration.
 2. In Vercel, click **Add New → Project** and import `yankeeDamn/MopLX`.
 3. Let Vercel detect the app as a **Next.js** project.
 4. **Add Environment Variables** (Project Settings → Environment Variables):
-   - `NEXTAUTH_SECRET` (required) - A random string at least 32 characters
-   - `NEXTAUTH_URL` (required) - Your production URL (e.g., `https://mop-lx.vercel.app`)
-   - `NEXT_PUBLIC_APP_URL` (optional) - Same as NEXTAUTH_URL, used for email links
+   - `NEXT_PUBLIC_SUPABASE_URL` (required) - Your Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` (required) - Your Supabase anon key
+   - `SUPABASE_SERVICE_ROLE_KEY` (required) - Your Supabase service role key
+   - `NEXT_PUBLIC_ADMIN_EMAIL` (required) - Email address allowed into `/admin`
+   - `ADMIN_EMAIL` (required) - Same admin email for middleware checks
+   - `NEXT_PUBLIC_APP_URL` (required) - Your production URL (for links and sharing)
+   - `NEXT_PUBLIC_BASE_URL` (optional) - Canonical base URL for sitemap/robots
+   - `API_SECRET_KEY` (recommended) - Protects article creation in production
    - `RESEND_API_KEY` (optional) - For email verification
    - `EMAIL_FROM` (optional) - Sender email address
+   - `NEXTAUTH_URL` (optional) - Fallback URL used by email helpers
 5. Deploy.
 
 ### Why the default setup works
