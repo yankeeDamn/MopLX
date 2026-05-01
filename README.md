@@ -2,8 +2,24 @@
 
 A modern newsletter and learning platform for DevOps, Cloud, and Infrastructure engineers. Built with Next.js, TypeScript, and Tailwind CSS.
 
+## 🎉 New Features
+
+**Enhanced Admin Dashboard** with powerful content management capabilities:
+- 📸 **Media Management** - Upload and manage images/videos with drag-and-drop
+- 📊 **Analytics Dashboard** - Track views, shares, and engagement metrics
+- 🔄 **Social Media Sharing** - One-click sharing to Facebook, LinkedIn, Twitter, Reddit
+- 🔍 **Advanced Search & Filtering** - Find content quickly with multiple filters
+- 📦 **Bulk Operations** - Publish/unpublish/delete multiple articles at once
+- 👁️ **Preview Mode** - See how articles look before publishing
+- 🎨 **Multiple View Modes** - List, Grid, and Analytics views
+
+**📖 Documentation:**
+- **[Setup Guide](./SETUP_GUIDE.md)** - Get started in 15 minutes
+- **[Admin Guide](./ADMIN_GUIDE.md)** - Complete feature documentation
+
 ## 🚀 Features
 
+### Core Features
 - **User Authentication**: Sign up/sign in with email verification using NextAuth.js v5
 - **Email Verification**: Confirmation emails via Resend (optional, works without in dev mode)
 - **Newsletter Subscription**: Email subscription with API integration ready for services like Mailchimp, ConvertKit, or Resend
@@ -15,39 +31,83 @@ A modern newsletter and learning platform for DevOps, Cloud, and Infrastructure 
 - **Dark Mode**: Automatic dark mode based on system preference
 - **SEO Optimized**: Meta tags, structured content, and semantic HTML
 
+### Admin Dashboard Features
+- **Rich Content Editor**: Create and edit articles with markdown support and live preview
+- **Media Management**: Upload images and videos directly to Supabase Storage
+- **Analytics Dashboard**: Track views, shares, and engagement metrics per article
+- **Social Sharing**: Built-in sharing to Facebook, LinkedIn, Twitter, and Reddit
+- **Search & Filtering**: Advanced search and filter by status, type, and category
+- **Bulk Operations**: Select multiple articles to publish, unpublish, or delete
+- **Multiple Views**: Switch between List, Grid, and Analytics views
+- **Draft Management**: Save articles as drafts and publish when ready
+- **Featured Articles**: Mark articles as featured for homepage display
+
 ## 📁 Architecture
 
 ```
 src/
 ├── app/
 │   ├── (auth)/
-│   │   ├── signin/           # Sign in page
+│   │   ├── signin/              # Sign in page
 │   │   │   └── page.tsx
-│   │   └── signup/           # Sign up page
+│   │   └── signup/              # Sign up page
 │   │       └── page.tsx
+│   ├── admin/                   # ⭐ Enhanced Admin Dashboard
+│   │   ├── page.tsx
+│   │   ├── AdminClient.tsx      # Legacy admin
+│   │   └── EnhancedAdminDashboard.tsx  # New admin with all features
 │   ├── api/
-│   │   ├── auth/
-│   │   │   ├── [...nextauth]/ # NextAuth.js handler
-│   │   │   │   └── route.ts
-│   │   │   ├── signup/        # User registration endpoint
-│   │   │   │   └── route.ts
-│   │   │   └── verify/        # Email verification endpoint
-│   │   │       └── route.ts
-│   │   ├── subscribe/        # Newsletter subscription API endpoint
+│   │   ├── analytics/           # ⭐ Analytics tracking API
 │   │   │   └── route.ts
-│   │   └── articles/         # Articles CRUD API endpoint
+│   │   ├── media/               # ⭐ Media upload/management API
+│   │   │   └── route.ts
+│   │   ├── auth/
+│   │   │   ├── [...nextauth]/   # NextAuth.js handler
+│   │   │   │   └── route.ts
+│   │   │   ├── signup/          # User registration endpoint
+│   │   │   │   └── route.ts
+│   │   │   └── verify/          # Email verification endpoint
+│   │   │       └── route.ts
+│   │   ├── subscribe/           # Newsletter subscription API endpoint
+│   │   │   └── route.ts
+│   │   └── articles/            # Articles CRUD API endpoint
 │   │       └── route.ts
 │   ├── resources/
-│   │   ├── [slug]/           # Individual resource pages (dynamic routes)
-│   │   │   └── page.tsx
-│   │   └── page.tsx          # Resources listing page
+│   │   ├── [slug]/              # Individual resource pages (dynamic routes)
+│   │   │   └── page.tsx         # ⭐ Enhanced with social sharing
+│   │   └── page.tsx             # Resources listing page
 │   ├── pricing/
-│   │   └── page.tsx          # Pricing plans page
+│   │   └── page.tsx             # Pricing plans page
 │   ├── contact/
-│   │   └── page.tsx          # Contact page with details
-│   ├── globals.css           # Global styles and CSS variables
-│   ├── layout.tsx            # Root layout with Navbar + Footer + SessionProvider
-│   └── page.tsx              # Landing page (Hero + Features + Resources)
+│   │   └── page.tsx             # Contact page with details
+│   ├── globals.css              # Global styles and CSS variables
+│   ├── layout.tsx               # Root layout with Navbar + Footer + SessionProvider
+│   └── page.tsx                 # Landing page (Hero + Features + Resources)
+├── components/
+│   ├── Navbar.tsx               # Navigation with mobile menu and auth state
+│   ├── Footer.tsx               # Footer with links, social, and contact
+│   ├── Hero.tsx                 # Hero section with CTA
+│   ├── Features.tsx             # Feature cards section
+│   ├── FeaturedResources.tsx    # Resource preview section
+│   ├── ResourceCard.tsx         # Resource card component
+│   ├── NewsletterForm.tsx       # Newsletter subscription form
+│   ├── AuthForm.tsx             # Sign in/sign up form component
+│   ├── SessionProvider.tsx      # NextAuth session provider wrapper
+│   ├── ShareButtons.tsx         # ⭐ Social media sharing buttons
+│   ├── MediaUploader.tsx        # ⭐ Drag-and-drop media uploader
+│   └── ResourceAnalyticsTracker.tsx  # ⭐ Automatic view tracking
+├── lib/
+│   ├── auth.ts                  # NextAuth configuration and user management
+│   ├── email.ts                 # Email service using Resend
+│   ├── resources.ts             # Resource data and helper functions
+│   └── supabase/
+│       ├── client.ts            # Supabase browser client
+│       └── server.ts            # Supabase server client
+├── types/
+│   └── database.ts              # ⭐ Enhanced TypeScript types for Supabase
+└── supabase/
+    └── schema.sql               # ⭐ Enhanced database schema with new tables
+```
 ├── components/
 │   ├── Navbar.tsx            # Navigation with mobile menu and auth state
 │   ├── Footer.tsx            # Footer with links, social, and contact
