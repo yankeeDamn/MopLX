@@ -198,6 +198,48 @@ BEGIN
 END;
 $$;
 
+-- ─── NEWSLETTER SUBSCRIBERS TABLE ───────────────────────────
+-- Stores email addresses that have subscribed to the newsletter.
+-- Emails are stored as lowercase and must be unique.
+CREATE TABLE IF NOT EXISTS public.subscribers (
+  id                uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
+  email             text        UNIQUE NOT NULL,
+  -- Optional: token for one-click unsubscribe links in emails
+  unsubscribe_token uuid        NOT NULL DEFAULT gen_random_uuid(),
+  -- Set to true after the subscriber confirms their email (double opt-in)
+  confirmed         boolean     NOT NULL DEFAULT false,
+  subscribed_at     timestamptz NOT NULL DEFAULT now(),
+  unsubscribed_at   timestamptz                          -- NULL means still active
+);
+
+-- Index for fast email lookups
+CREATE INDEX IF NOT EXISTS idx_subscribers_email ON public.subscribers (email);
+-- Index to quickly find active (unsubscribed_at IS NULL) confirmed subscribers for sends
+CREATE INDEX IF NOT EXISTS idx_subscribers_active ON public.subscribers (confirmed, unsubscribed_at);
+
+-- RLS for subscribers
+ALTER TABLE public.subscribers ENABLE ROW LEVEL SECURITY;
+
+-- Allow anyone to insert their own email (public subscription endpoint)
+CREATE POLICY "Anyone can subscribe"
+  ON public.subscribers
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Only authenticated (admin) users can read the full subscriber list
+CREATE POLICY "Authenticated users can read subscribers"
+  ON public.subscribers
+  FOR SELECT
+  TO authenticated
+  USING (true);
+
+-- Only authenticated users can update (e.g., mark confirmed, set unsubscribed_at)
+CREATE POLICY "Authenticated users can update subscribers"
+  ON public.subscribers
+  FOR UPDATE
+  TO authenticated
+  USING (true);
+
 -- ─── SUPABASE AUTH CONFIGURATION ─────────────────────────────
 -- In Supabase Dashboard → Authentication → Settings:
 --   • Enable "Email" provider
