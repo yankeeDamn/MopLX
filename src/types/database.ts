@@ -57,6 +57,16 @@ export interface ResourceStats {
   twitter_shares: number;
 }
 
+/** A newsletter subscriber record stored in the `subscribers` table. */
+export interface Subscriber {
+  id: string;
+  email: string;
+  unsubscribe_token: string;
+  confirmed: boolean;
+  subscribed_at: string;
+  unsubscribed_at: string | null;
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -110,6 +120,17 @@ export type Database = {
             referencedColumns: ["id"];
           }
         ];
+      };
+      subscribers: {
+        Row: Subscriber;
+        Insert: Omit<Subscriber, "id" | "subscribed_at" | "unsubscribe_token" | "unsubscribed_at"> & {
+          id?: string;
+          unsubscribe_token?: string;
+          subscribed_at?: string;
+          unsubscribed_at?: string | null;
+        };
+        Update: Partial<Omit<Subscriber, "id" | "subscribed_at">>;
+        Relationships: [];
       };
     };
     Views: {
