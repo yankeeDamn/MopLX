@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import type { Resource, ResourceStats } from "@/types/database";
+import type { Resource, ResourceStats, Database } from "@/types/database";
 import { useRouter } from "next/navigation";
 import MediaUploader from "@/components/MediaUploader";
 import ShareButtons from "@/components/ShareButtons";
@@ -200,7 +200,7 @@ export default function EnhancedAdminDashboard() {
     setSaving(true);
     setFeedback(null);
 
-    const payload = {
+    const payload: Database['public']['Tables']['resources']['Update'] = {
       slug: form.slug.trim(),
       title: form.title.trim(),
       description: form.description.trim(),
@@ -223,9 +223,23 @@ export default function EnhancedAdminDashboard() {
         .eq("id", editing.id);
       error = updateError;
     } else {
+      const insertPayload: Database['public']['Tables']['resources']['Insert'] = {
+        ...payload,
+        slug: payload.slug!,
+        title: payload.title!,
+        description: payload.description!,
+        category: payload.category!,
+        type: payload.type!,
+        image: payload.image!,
+        content: payload.content!,
+        published_at: payload.published_at!,
+        read_time: payload.read_time!,
+        is_published: payload.is_published!,
+        featured: payload.featured!,
+      };
       const { error: insertError } = await supabase
         .from("resources")
-        .insert(payload);
+        .insert(insertPayload);
       error = insertError;
     }
 
