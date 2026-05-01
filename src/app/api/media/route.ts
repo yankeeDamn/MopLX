@@ -185,9 +185,10 @@ export async function DELETE(request: Request) {
 
     // Delete from storage
     const bucket = media.type === "video" ? "videos" : "images";
-    const fileName = media.url.split("/").pop();
+    const urlParts = media.url.split("/");
+    const fileName = urlParts[urlParts.length - 1];
     
-    if (fileName) {
+    if (fileName && fileName.trim()) {
       await supabase.storage.from(bucket).remove([fileName]);
     }
 

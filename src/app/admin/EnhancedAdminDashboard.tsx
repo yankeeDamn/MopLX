@@ -217,11 +217,16 @@ export default function EnhancedAdminDashboard() {
 
     let error;
     if (editing) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ({ error } = await (supabase.from("resources") as any).update(payload).eq("id", editing.id));
+      const { error: updateError } = await supabase
+        .from("resources")
+        .update(payload)
+        .eq("id", editing.id);
+      error = updateError;
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ({ error } = await (supabase.from("resources") as any).insert(payload));
+      const { error: insertError } = await supabase
+        .from("resources")
+        .insert(payload);
+      error = insertError;
     }
 
     setSaving(false);
